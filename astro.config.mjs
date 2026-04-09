@@ -3,6 +3,6 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   integrations: [tailwind()],
-  site: 'https://rainbowbreeze.github.io',
+  site: 'https://rainbow-agentai.github.io',
   base: '/portfolio-talks',
 });
