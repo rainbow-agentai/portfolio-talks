@@ -2,21 +2,33 @@
 const { talk } = Astro.props;
 const dateStr = talk.date ? new Date(talk.date).toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Data N/D';
 
-// Generate a cool unique geometric thumbnail based on the talk title
-const seed = encodeURIComponent(talk.title);
-const thumbnailUrl = `https://api.dicebear.com/8.x/shapes/svg?seed=${seed}&backgroundColor=000000,111111,222222&shape1Color=facc15,ffffff,333333`;
+// Genera un prompt per l'immagine basato sul titolo del talk e sullo stile richiesto
+const basePrompt = "Studio Ghibli style illustration, digital line and wash, a young boy and a small retro robot sitting on a rooftop looking at an overgrown solarpunk city at sunset, cinematic lighting, concept: ";
+const fullPrompt = basePrompt + talk.title;
+const encodedPrompt = encodeURIComponent(fullPrompt);
+
+// Usa Pollinations.ai per generare l'immagine on-the-fly
+const thumbnailUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=600&height=400&nologo=true`;
 ---
 <a href={talk.url} target="_blank" class="group flex flex-col md:flex-row bg-[#111] border border-white/10 rounded-3xl hover:border-brand-yellow/50 transition-all duration-500 hover:-translate-y-1 overflow-hidden">
     
-    <!-- Thumbnail -->
-    <div class="w-full md:w-64 h-48 md:h-auto relative bg-[#0a0a0a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden">
+    <!-- Thumbnail AI (Solarpunk / Studio Ghibli style) -->
+    <div class="w-full md:w-72 h-56 md:h-auto relative bg-[#0a0a0a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden">
+        <!-- Mostra un placeholder di caricamento o il colore di sfondo finché l'immagine AI non viene caricata -->
+        <div class="absolute inset-0 flex items-center justify-center text-zinc-800 animate-pulse">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+        </div>
         <img 
             src={thumbnailUrl} 
-            alt={`Thumbnail for ${talk.title}`} 
-            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 opacity-70 group-hover:opacity-100" 
+            alt={`Copertina AI per: ${talk.title}`} 
+            loading="lazy"
+            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 group-hover:-rotate-1 transition-transform duration-700 opacity-90 group-hover:opacity-100 z-10 relative" 
+            onload="this.previousElementSibling.style.display='none';"
         />
-        <!-- Overlay scuro per sfumare l'immagine verso il testo -->
-        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#111] via-transparent to-transparent opacity-80 md:opacity-100"></div>
+        <!-- Overlay scuro per migliorare la leggibilità e l'integrazione -->
+        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#111] via-transparent to-transparent opacity-80 md:opacity-100 z-20"></div>
     </div>
 
     <!-- Content -->
