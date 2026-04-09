@@ -1,17 +1,36 @@
 ---
 const { talk } = Astro.props;
 const dateStr = talk.date ? new Date(talk.date).toLocaleDateString('it-IT', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Data N/D';
+
+// Generate a cool unique geometric thumbnail based on the talk title
+const seed = encodeURIComponent(talk.title);
+const thumbnailUrl = `https://api.dicebear.com/8.x/shapes/svg?seed=${seed}&backgroundColor=000000,111111,222222&shape1Color=facc15,ffffff,333333`;
 ---
-<a href={talk.url} target="_blank" class="group block bg-[#111] border border-white/10 p-8 rounded-3xl hover:border-brand-yellow/50 transition-all duration-500 hover:-translate-y-2">
-    <div class="flex justify-between items-start mb-6">
-        <span class="text-xs font-bold tracking-widest text-brand-yellow uppercase bg-brand-yellow/10 px-3 py-1 rounded-full">{dateStr}</span>
+<a href={talk.url} target="_blank" class="group flex flex-col md:flex-row bg-[#111] border border-white/10 rounded-3xl hover:border-brand-yellow/50 transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+    
+    <!-- Thumbnail -->
+    <div class="w-full md:w-64 h-48 md:h-auto relative bg-[#0a0a0a] flex-shrink-0 border-b md:border-b-0 md:border-r border-white/5 overflow-hidden">
+        <img 
+            src={thumbnailUrl} 
+            alt={`Thumbnail for ${talk.title}`} 
+            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 opacity-70 group-hover:opacity-100" 
+        />
+        <!-- Overlay scuro per sfumare l'immagine verso il testo -->
+        <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#111] via-transparent to-transparent opacity-80 md:opacity-100"></div>
     </div>
-    <h3 class="text-2xl font-bold mb-4 group-hover:text-brand-yellow transition-colors leading-tight">{talk.title}</h3>
-    <p class="text-zinc-500 line-clamp-3 text-sm leading-relaxed mb-8">{talk.excerpt}</p>
-    <div class="flex items-center text-brand-yellow font-bold text-sm">
-        VEDI DETTAGLI 
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
+
+    <!-- Content -->
+    <div class="p-8 flex flex-col flex-grow">
+        <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-bold tracking-widest text-brand-yellow uppercase bg-brand-yellow/10 px-3 py-1 rounded-full">{dateStr}</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-3 group-hover:text-brand-yellow transition-colors leading-tight">{talk.title}</h3>
+        <p class="text-zinc-500 line-clamp-3 text-sm leading-relaxed mb-6 flex-grow">{talk.excerpt}</p>
+        <div class="flex items-center text-brand-yellow font-bold text-sm mt-auto">
+            VEDI DETTAGLI 
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+        </div>
     </div>
 </a>
