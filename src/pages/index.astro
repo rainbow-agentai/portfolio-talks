@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TalkCard from '../components/TalkCard.astro';
+import talks from '../data/talks.json';
+
+const sortedTalks = talks.sort((a, b) => new Date(b.date) - new Date(a.date));
+---
+<Layout title="Alfredo Morresi | Talk Portfolio">
+	<main class="max-w-7xl mx-auto px-6 py-12">
+		<header class="py-24 border-b border-white/5 mb-16">
+			<div class="flex items-center space-x-3 mb-8">
+                <span class="h-[2px] w-8 bg-brand-yellow"></span>
+                <span class="text-brand-yellow text-sm font-black uppercase tracking-[0.2em]">Public Speaker</span>
+            </div>
+			<h1 class="text-7xl md:text-9xl font-black mb-12 tracking-tighter">
+				ALFREDO <br/> <span class="text-brand-yellow">MORRESI.</span>
+			</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-end">
+                <p class="text-2xl text-zinc-400 font-light leading-relaxed">
+                    Benvenuti nel mio archivio digitale. Qui raccolgo anni di esperienze condivise su palchi internazionali, 
+                    dai meetup locali alle grandi conferenze Google.
+                </p>
+                <div class="flex space-x-8 text-sm font-bold tracking-widest uppercase">
+                    <a href="https://bsky.app/profile/rainbowbreeze.it" class="hover:text-brand-yellow transition-colors">Bluesky</a>
+                    <a href="https://linkedin.com/in/alfredomorresi" class="hover:text-brand-yellow transition-colors">LinkedIn</a>
+                    <a href="https://github.com/rainbowbreeze" class="hover:text-brand-yellow transition-colors">GitHub</a>
+                </div>
+            </div>
+		</header>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+			{sortedTalks.map((talk) => (
+				<TalkCard talk={talk} />
+			))}
+		</div>
+
+		<footer class="mt-40 py-12 flex flex-col md:flex-row justify-between items-center text-zinc-600 text-xs font-bold tracking-widest uppercase gap-4">
+			<p>© {new Date().getFullYear()} Alfredo Morresi</p>
+            <p>Made with 💛 by Neko-chan</p>
+		</footer>
+	</main>
+</Layout>
